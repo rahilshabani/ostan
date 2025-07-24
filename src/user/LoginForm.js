@@ -32,11 +32,6 @@ const handleSubmit = async (e) => {
   setErrorMessage("");
 
   try {
-    // اجرای تابع login و منتظر ماندن برای نتیجه آن
-    // await login(username, password);
-
-    // // بعد از موفقیت‌آمیز بودن لاگین، ریدایرکت:
-    // navigate("/profile");
 
     const result = await login(username, password, rememberMe);
     navigate(result.redirect);
@@ -54,17 +49,6 @@ const handleSubmit = async (e) => {
   }
 };
 
-// انتقال login به بیرون از handleSubmit
-// const login = async (username, password) => {
-//   try {
-//     const res = await axios.post("/users/login/", { username, password });
-//     console.log("Login successful", res.data);
-//   } catch (err) {
-//     console.error("Login failed", err.response?.data);
-//     throw err; // پرتاب خطا برای catch بالادستی
-//   }
-// };
-
 
 const login = async (username, password, remember) => {
   const res = await axios.post("/users/login/", {
@@ -72,7 +56,7 @@ const login = async (username, password, remember) => {
     password,
     remember
   });
-  return res.data;  // پاسخ بک‌اند رو برمی‌گردونه
+  return res.data;  
 };
 
 

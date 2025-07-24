@@ -55,7 +55,7 @@ const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
   className="w-10 h-10 rounded-full"
 />
 
-          <h1 className="text-xl font-bold">گروه کامپیوتر استان مازندران</h1>
+          <h1 className="text-xl font-bold">تست</h1>
         </div>
 <nav className="hidden md:flex flex-row-reverse space-x-6 space-x-reverse">
   <a href="#" className="hover:text-yellow-300 transition">خانه</a>
