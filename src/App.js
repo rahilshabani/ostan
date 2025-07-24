@@ -9,8 +9,7 @@ import './tailwind.min.css';
 import './globalStyle.css';
 import CreateProgram from './programs/CreateProgram';
 import CreatSubProgram from './programs/CreateSubProgram';
-import L from './logintest/login';
-import P from './logintest/profile';
+
 import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
@@ -32,18 +31,10 @@ function App() {
           }
         />
 
-        {/* <Route path="/profile" element={<Profile />} /> */}
         <Route path="/programs" element={<CreateProgram />} />
         <Route path="/subprograms" element={<CreatSubProgram />} />
         <Route path="/manager" element={<Manager />} />
         
-        <Route
-          path="/logintest/*"
-          element={authenticated 
-            ? <P setAuthenticated={setAuthenticated} /> 
-            : <L setAuthenticated={setAuthenticated} />
-          }
-        />
       </Routes>
     </Router>
   );

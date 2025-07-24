@@ -66,16 +66,8 @@ const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
 
       </header>
 
-      {/* Carousel */}
     <div className="max-w-4xl mx-auto p-4 min-h-screen flex items-center justify-center">
-        {/* <motion.h1
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="text-3xl font-bold text-blue-800 mb-6 text-center"
-        >
-          وبسایت آموزش هنری
-        </motion.h1> */}
+     
 
         <div className="rounded-2xl overflow-hidden shadow-lg">
 {carouselImages.length > 0 && (
