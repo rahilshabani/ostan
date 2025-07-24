@@ -78,26 +78,30 @@ const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
         </motion.h1> */}
 
         <div className="rounded-2xl overflow-hidden shadow-lg">
-          <Carousel
-            showThumbs={false}
-            infiniteLoop
-            autoPlay
-            interval={4000}
-            showStatus={false}
-            showArrows={false}
-            dynamicHeight={false}
-          >
-            {carouselImages.map((src, index) => (
-              <div key={index}>
-                <img
-                  src={src}
-                  alt={`slide-${index}`}
-                  className="w-full object-cover"
-                  style={{ maxHeight: "400px", height: "100%" }}
-                />
-              </div>
-            ))}
-          </Carousel>
+{carouselImages.length > 0 && (
+  <Carousel
+    showThumbs={false}
+    infiniteLoop
+    autoPlay
+    interval={4000}
+    showStatus={false}
+    showArrows={false}
+    stopOnHover={false}
+    dynamicHeight={false}
+  >
+    {carouselImages.map((src, index) => (
+      <div key={index}>
+        <img
+          src={src}
+          alt={`slide-${index}`}
+          className="w-full object-cover"
+          style={{ maxHeight: "400px", height: "100%" }}
+        />
+      </div>
+    ))}
+  </Carousel>
+)}
+
         </div>
       </div>
 
