@@ -1,0 +1,41 @@
+.DatePicker__calendarContainer {
+  z-index: 9999 !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+
+/* index.css یا App.css */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #93c5fd transparent;  /* رنگ آبی ملایم Tailwind: blue-300 */
+}
+
+/* برای Chrome و Edge */
+.custom-scrollbar::-webkit-scrollbar {
+  height: 8px; /* برای اسکرول افقی */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #93c5fd; /* آبی ملایم */
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+
+
+.custom-scroll {
+  max-height: 100vh;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+  .custom-scroll {
+    max-height: none;
+  }
+}
