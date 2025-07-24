@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import mazandaranCounties from '../data/mazandaranCounties';
 axios.defaults.withCredentials = true;
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://rahilshabani.pythonanywhere.com/';
+
 const AddCityModal = ({ isOpen, onClose }) => {
 const [cities, setCities] = useState([]);
   useEffect(() => {
@@ -14,13 +16,15 @@ const [cities, setCities] = useState([]);
       area: '',
     });
 
-    axios.get("https://rahilshabani.pythonanywhere.com//users/cities/")  
-      .then((response) => {
-        setCities(response.data); 
-      })
-      .catch((error) => {
-        console.error("خطا در دریافت شهرها:", error);
-      });
+
+    axios.get(`${backendUrl}users/cities/`)
+  .then((response) => {
+    setCities(response.data);
+  })
+  .catch((error) => {
+    console.error("خطا در دریافت شهرها:", error);
+  });
+
   }
 }, [isOpen]);
 
@@ -41,12 +45,13 @@ const [cities, setCities] = useState([]);
   const handleSubmit = async (e) => {
     
     e.preventDefault();
-    try {
-      const response = await axios.post("https://rahilshabani.pythonanywhere.com//manager/register/", formData);
-      onClose(formData);
-    } catch (error) {
-      console.error("خطا در ثبت‌نام:", error.response?.data);
-    }
+   try {
+  const response = await axios.post(`${backendUrl}manager/register/`, formData);
+  onClose(formData);
+} catch (error) {
+  console.error("خطا در ثبت‌نام:", error.response?.data);
+}
+
   };
 
   if (!isOpen) return null;

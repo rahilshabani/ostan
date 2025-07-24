@@ -8,7 +8,7 @@ export default function HomePage() {
   const [videos, setVideos] = useState([]);
   const [galleryImages, setGalleryImages] = useState([]);
   const [carouselImages, setCarouselImages] = useState([]);
-const API_BASE_URL = "https://rahilshabani.pythonanywhere.com/media/api";
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 
 const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;

@@ -8,7 +8,7 @@ const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [programs, setPrograms] = useState([]);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");

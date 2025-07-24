@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const CreateSubProgram = () => {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://rahilshabani.pythonanywhere.com/';
+
   const [programs, setPrograms] = useState([]);
   const [formData, setFormData] = useState({
     program_id: '',
@@ -10,16 +12,17 @@ const CreateSubProgram = () => {
   });
   const [message, setMessage] = useState('');
 
-  // گرفتن لیست برنامه‌ها
-  useEffect(() => {
-    axios.get('https://rahilshabani.pythonanywhere.com//programs/view/')
-      .then((response) => {
-        setPrograms(response.data);
-      })
-      .catch((error) => {
-        console.error("خطا در دریافت لیست برنامه‌ها:", error);
-      });
-  }, []);
+ 
+ useEffect(() => {
+  axios.get(`${backendUrl}programs/view/`)
+    .then((response) => {
+      setPrograms(response.data);
+    })
+    .catch((error) => {
+      console.error("خطا در دریافت لیست برنامه‌ها:", error);
+    });
+}, []);
+
 
   // تغییر در فرم
   const handleChange = (e) => {
@@ -29,14 +32,14 @@ const CreateSubProgram = () => {
   // ثبت زیر برنامه
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post('https://rahilshabani.pythonanywhere.com//programs/create_sub/', formData);
-      setMessage('✅ زیربرنامه با موفقیت ثبت شد!');
-      setFormData({ program_id: '', title: '', content: '' });
-    } catch (error) {
-      console.error(error);
-      setMessage('❌ خطا در ثبت زیربرنامه.');
-    }
+try {
+  await axios.post(`${backendUrl}programs/create_sub/`, formData);
+  setMessage('✅ زیربرنامه با موفقیت ثبت شد!');
+  setFormData({ program_id: '', title: '', content: '' });
+} catch (error) {
+  console.error(error);
+  setMessage('❌ خطا در ثبت زیربرنامه.');
+}
   };
 
   return (

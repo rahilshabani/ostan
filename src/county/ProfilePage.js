@@ -10,7 +10,7 @@ import ShowSchools from './ShowSchools';
 import Plot from '../manager/plot'
 import ReChart from '../manager/rechart';
 
-axios.defaults.baseURL = "https://rahilshabani.pythonanywhere.com/";
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
 
 

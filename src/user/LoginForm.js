@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-axios.defaults.baseURL = "https://rahilshabani.pythonanywhere.com/";
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
+
+
 axios.defaults.withCredentials = true;
 
 const LoginForm = () => {
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
+  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -63,24 +68,22 @@ const login = async (username, password, remember) => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 p-4" dir="rtl">
-         <header className="fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex justify-between items-center shadow-lg">
-        <div className="flex items-center space-x-3 rtl:space-x-reverse">
+      <header className="fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex flex-row-reverse justify-between items-center shadow-lg">
+        <div className="flex items-center flex-row-reverse space-x-3">
           <img
-  src={LOGO_URL}
-  alt="لوگو"
-  className="w-10 h-10 rounded-full"
-/>
-
-          <h1 className="text-xl font-bold">گروه کامپیوتر استان مازندران</h1>
+            src={LOGO_URL}
+            alt="لوگو"
+            className="w-10 h-10 rounded-full"
+          />
+          <h1 className="text-xl font-bold text-white">گروه کامپیوتر استان مازندران</h1>
         </div>
-<nav className="hidden md:flex flex-row-reverse space-x-6 space-x-reverse">
-  <a href="/" className="hover:text-yellow-300 transition text-white">خانه</a>
-  <a href="/login/" className="hover:text-yellow-300 transition">پنل کاربری</a>
-  <a href="#" className="hover:text-yellow-300 transition">درباره ما</a>
-</nav>
-
-
+        <nav className="hidden md:flex space-x-6 space-x-reverse text-white">
+          <a href="/" className="hover:text-yellow-300 transition">خانه</a>
+          <a href="/login/" className="hover:text-yellow-300 transition">پنل کاربری</a>
+          <a href="#" className="hover:text-yellow-300 transition">درباره ما</a>
+        </nav>
       </header>
+
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-4">گروه آموزشی کامپیوتر استان مازندران</h2>
         <h2 className="text-2xl font-bold text-center mb-4">ورود به سامانه</h2>

@@ -45,19 +45,19 @@ const handleResetPassword = async () => {
   try {
   // const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
 
-    const response = await axios.post(
-      'https://rahilshabani.pythonanywhere.com//users/reset-password/',
-      {
-        user_id: formData.id,
-        code: formData.code,
-      },
-      {
-        headers: {
-          // Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+  const response = await axios.post(
+  `${backendUrl}users/reset-password/`,
+  {
+    user_id: formData.id,
+    code: formData.code,
+  },
+  {
+    headers: {
+      // Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  }
+);
 
     setSuccess('نام کاربری و رمز عبور با موفقیت تغییر یافت.');
     setError('');
@@ -82,12 +82,13 @@ const handelDeleteThisCounty = async () => {
   try {
  
 
-    const response = await axios.post(
-      'https://rahilshabani.pythonanywhere.com//users/delete/',
-      {
-        user_id: formData.id,
-      }
-    );
+  const response = await axios.post(
+  `${backendUrl}users/delete/`,
+  {
+    user_id: formData.id,
+  }
+);
+
 
     onDelete(formData.id);
 

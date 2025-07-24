@@ -69,11 +69,12 @@ const handelDeleteThisCounty = async () => {
 
   try {
     const response = await axios.post(
-      'https://rahilshabani.pythonanywhere.com//users/delete-county/',
+      `${backendUrl}users/delete-county/`,
       {
         user_id: formData.id,
       }
     );
+
 
     onDelete(formData.id);
 

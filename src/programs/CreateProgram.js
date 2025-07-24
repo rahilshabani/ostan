@@ -3,7 +3,11 @@ import axios from 'axios';
 import Calendar from '@hassanmojab/react-modern-calendar-datepicker';
 import '@hassanmojab/react-modern-calendar-datepicker/lib/DatePicker.css';
 
+
+
 const CreateProgram = () => {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://rahilshabani.pythonanywhere.com/';
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -25,10 +29,10 @@ const CreateProgram = () => {
         ? `${selectedDay.year}-${selectedDay.month.toString().padStart(2, '0')}-${selectedDay.day.toString().padStart(2, '0')}`
         : '';
 
-      await axios.post('https://rahilshabani.pythonanywhere.com//programs/create/', {
-        ...formData,
-        submission_deadline: dateStr,
-      });
+    await axios.post(`${backendUrl}programs/create/`, {
+  ...formData,
+  submission_deadline: dateStr,
+});
 
       setMessage('✅ برنامه با موفقیت ثبت شد!');
       setFormData({
