@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -7,6 +7,27 @@ axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
 
 const LoginForm = () => {
+const navigate = useNavigate();
+
+    useEffect(() => {
+    // بررسی اینکه آیا کاربر لاگین است
+    const checkLoggedIn = async () => {
+      try {
+        const res = await axios.get("/users/me/");
+        if (res.data.redirect) {
+          console.log(res.data)
+          navigate(res.data.redirect);
+        }
+      } catch (err) {
+        // اگر کاربر لاگین نیست، کاری نکن
+        console.log("Not logged in");
+      }
+    };
+
+    checkLoggedIn();
+  }, [navigate]);
+
+
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
   const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
@@ -20,7 +41,7 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
   const { username, password, rememberMe } = formData;
 
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
