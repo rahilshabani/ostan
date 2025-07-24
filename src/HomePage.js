@@ -47,18 +47,19 @@ const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
   return (
     <div className="bg-gradient-to-r from-blue-100 via-white to-blue-100 min-h-screen">
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex justify-between items-center shadow-lg">
+      <header className="text-white fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex justify-between items-center shadow-lg">
         <div className="flex items-center space-x-3 rtl:space-x-reverse">
           <img
   src={LOGO_URL}
   alt="لوگو"
   className="w-10 h-10 rounded-full"
 />
-
+<a href='/'>
           <h1 className="text-xl font-bold">گروه کامپیوتر استان مازندران</h1>
+</a>
         </div>
 <nav className="hidden md:flex flex-row-reverse space-x-6 space-x-reverse">
-  <a href="/" className="hover:text-yellow-300 transition text-white">خانه</a>
+  <a href="#" className="hover:text-yellow-300 transition font-bold">خانه</a>
   <a href="/login/" className="hover:text-yellow-300 transition">پنل کاربری</a>
   <a href="#" className="hover:text-yellow-300 transition">درباره ما</a>
 </nav>

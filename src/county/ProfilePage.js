@@ -15,6 +15,8 @@ axios.defaults.withCredentials = true;
 
 
 const ProfilePage = () => {
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
   const [activeSection, setActiveSection] = useState('status');
   const [user, setUser] = useState(null);
   const [programs, setPrograms] = useState([]);
@@ -202,6 +204,23 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen flex font-sans bg-gradient-to-br from-blue-50 to-white" dir="rtl">
+     <header className="fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex flex-row-reverse justify-between items-center shadow-lg">
+        <div className="flex items-center flex-row-reverse space-x-3">
+          <img
+            src={LOGO_URL}
+            alt="لوگو"
+            className="w-10 h-10 rounded-full"
+          /><a href='/'>
+          <h1 className="text-xl font-bold text-white">گروه کامپیوتر استان مازندران</h1>
+          </a>
+        </div>
+        <nav className="hidden md:flex space-x-6 space-x-reverse text-white">
+          <a href="/" className="hover:text-yellow-300 transition">خانه</a>
+          <a href="/login/" className="hover:text-yellow-300 transition font-bold">پنل کاربری</a>
+          <a href="#" className="hover:text-yellow-300 transition">درباره ما</a>
+        </nav>
+      </header>
+
 
       <input
         type="file"

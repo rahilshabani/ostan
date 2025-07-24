@@ -4,7 +4,6 @@ import { useNavigate, Link } from "react-router-dom";
 
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 
-
 axios.defaults.withCredentials = true;
 
 const LoginForm = () => {
@@ -74,12 +73,13 @@ const login = async (username, password, remember) => {
             src={LOGO_URL}
             alt="لوگو"
             className="w-10 h-10 rounded-full"
-          />
+          /><a href='/'>
           <h1 className="text-xl font-bold text-white">گروه کامپیوتر استان مازندران</h1>
+          </a>
         </div>
         <nav className="hidden md:flex space-x-6 space-x-reverse text-white">
           <a href="/" className="hover:text-yellow-300 transition">خانه</a>
-          <a href="/login/" className="hover:text-yellow-300 transition">پنل کاربری</a>
+          <a href="#" className="hover:text-yellow-300 transition font-bold">پنل کاربری</a>
           <a href="#" className="hover:text-yellow-300 transition">درباره ما</a>
         </nav>
       </header>

@@ -5,7 +5,7 @@ axios.defaults.withCredentials = true;
 
 
 const Profile = ({ id, onDelete }) => {
-  // console.log('Received ID:', id);
+
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
@@ -14,16 +14,9 @@ const Profile = ({ id, onDelete }) => {
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
 
 useEffect(() => {
-  // const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
-// console.log("Token being sent:", token);
 
-  axios.get(`${backendUrl}/users/profile/${id}/`
-    // , {
-    // headers: {
-    //   'Authorization': `Bearer ${token}`
-    // }
-  // }
-)
+
+  axios.get(`${backendUrl}/users/profile/${id}/`)
   .then(response => {
     setUser(response.data);
     setFormData({ ...response.data, password: '' });
@@ -43,7 +36,6 @@ const handleResetPassword = async () => {
   }
 
   try {
-  // const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
 
   const response = await axios.post(
   `${backendUrl}users/reset-password/`,
