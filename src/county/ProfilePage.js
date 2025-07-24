@@ -245,7 +245,7 @@ const ProfilePage = () => {
         {user ? (
           <div className="flex flex-col items-center space-y-2 mb-6">
             <img
-              src={user.profile_image ? `${backendUrl}${user.profile_image}` : "/default-avatar.png"}
+              src={user?.profile_image ? `${backendUrl}${user.profile_image}` : `${backendUrl}/media/base/default-avatar.png`}
               alt={user.username}
               className="w-20 h-20 object-cover rounded-full border-2 border-gray-300 cursor-pointer mt-10"
               onClick={handleImageClick}
