@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true;
 const LoginForm = () => {
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
-  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
+  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
   const [formData, setFormData] = useState({
     username: "",
     password: "",

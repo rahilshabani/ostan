@@ -16,7 +16,7 @@ axios.defaults.withCredentials = true;
 
 const ProfilePage = () => {
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
-  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
+  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
   const [activeSection, setActiveSection] = useState('status');
   const [user, setUser] = useState(null);
   const [programs, setPrograms] = useState([]);

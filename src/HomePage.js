@@ -9,11 +9,9 @@ export default function HomePage() {
   const [galleryImages, setGalleryImages] = useState([]);
   const [carouselImages, setCarouselImages] = useState([]);
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
-
-
-const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
+const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
   useEffect(() => {
-    fetch(`${API_BASE_URL}/videos/`)
+    fetch(`${API_BASE_URL}media/api/videos/`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data)
@@ -30,7 +28,7 @@ const LOGO_URL = `${API_BASE_URL.replace("/api", "")}/base/logo.png`;
   }, []);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/gallery/`)
+    fetch(`${API_BASE_URL}media/api/gallery/`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
