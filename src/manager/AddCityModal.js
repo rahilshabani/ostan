@@ -50,6 +50,7 @@ const [cities, setCities] = useState([]);
   onClose(formData);
 } catch (error) {
   console.error("خطا در ثبت‌نام:", error.response?.data);
+  alert("اشتباهی رخ داده است");
 }
 
   };

@@ -6,6 +6,7 @@ import ShowCities from './ShowCities';
 import ShowVisits from './ShowVisits';
 import Plot from './plot'; 
 import ManagerSTATUS from './managerStatus'
+import ChangePasswordForm from '../user/ChangePassword';
 
 axios.defaults.withCredentials = true;
 
@@ -44,13 +45,13 @@ function getCookie(name) {
   return cookieValue;
 }
 
-const logout = () => {
+  const logout = () => {
 
 
 const csrfToken = getCookie('csrftoken');
 
 axios.post(
-  `${API_BASE_URL}users/logout/`,
+  `/users/logout/`,
   {}, // body
   {
     headers: {
@@ -71,9 +72,6 @@ axios.post(
 
 
 };
-
-
-
 
 
 
@@ -132,19 +130,6 @@ axios.post(
         console.error("خطا در دریافت شهرستان ها", error);
       });
   };
-
-//   const handleLogout = async () => {
-//   try {
-//     await axios.post("/users/logout/",{credentials: 'include'});
-//   } catch (err) {
-//     console.error("خطا در لاگ‌اوت سمت سرور:", err.response?.data);
-//   } finally {
-//     localStorage.removeItem("access_token");
-//     localStorage.removeItem("refresh_token");
-//     axios.defaults.headers.common["Authorization"] = null;
-//     navigate("/login");
-//   }
-// };
 
 
   const renderSection = () => {
@@ -207,6 +192,14 @@ axios.post(
             <Plot valueKey="planValue" title='عملکرد شهرستان ها در مسابقات طراحی درس'/>
           </>
         );
+
+    case 'chpass':
+      return (
+        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+          <ChangePasswordForm />
+        </div>
+      );
+
       
       default:
         return null;
@@ -335,13 +328,18 @@ axios.post(
         >
           ❓ عملکرد در طراحی سوال عملکردی
         </button>
-
+        <button
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'chpass' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          onClick={() => { setActiveSection('chpass'); setSidebarOpen(false); }}
+        >
+          🔒 تغییر رمز عبور
+        </button>
        <button
-  className="w-full text-right py-2 px-4 rounded-lg hover:bg-red-50"
-  onClick={logout}
->
-  🔓 خروج
-</button>
+          className="w-full text-right py-2 px-4 rounded-lg hover:bg-red-50"
+          onClick={logout}
+        >
+          🔓 خروج
+        </button>
 
       </aside>
 

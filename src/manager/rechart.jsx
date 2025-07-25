@@ -9,7 +9,7 @@ export default function CityBarChart({title,county,apiUrl,highlightColor='#ff4d4
         
         axios.get(apiUrl)
         .then(response=>{
-            console.log(response.data)
+            // console.log(response.data)
             setData(response.data)
             // setData([
             //     {"name":"ghaemshahr","value":100},

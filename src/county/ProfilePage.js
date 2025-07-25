@@ -9,6 +9,8 @@ import AddSchoolModal from './AddSchoolModal';
 import ShowSchools from './ShowSchools';
 import Plot from '../manager/plot'
 import ReChart from '../manager/rechart';
+import ChangePasswordForm from '../user/ChangePassword';
+
 
 axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
@@ -221,6 +223,12 @@ axios.post(
         return <Plot valueKey="plan" admin="false" title='عملکرد شهرستان ها در طراحی درس' />
       case 'question':
         return <Plot valueKey="question" admin="false" title='عملکرد شهرستان ها در مسابقات سوالات عملکردی' />
+          case 'chpass':
+      return (
+        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+          <ChangePasswordForm />
+        </div>
+      );
       default:
         return null;
     }
@@ -372,6 +380,12 @@ axios.post(
             </button>
           </>
         )}
+        <button
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'chpass' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          onClick={() => { setActiveSection('chpass'); setSidebarOpen(false); }}
+        >
+          🔒 تغییر رمز عبور
+        </button>
 
         <button
           className="w-full text-right py-2 px-4 rounded-lg hover:bg-red-50"
