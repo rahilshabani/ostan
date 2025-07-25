@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, use } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -9,6 +9,7 @@ axios.defaults.withCredentials = true;
 const LoginForm = () => {
 const navigate = useNavigate();
 const [hasCheckedLogin, setHasCheckedLogin] = useState(false);
+const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 useEffect(() => {
   if (hasCheckedLogin) return;
@@ -16,11 +17,12 @@ useEffect(() => {
   const checkLoggedIn = async () => {
     try {
       const res = await axios.get("/users/me/");
-      if (res.data && res.data.username) {
+      if (res.status === 200 && res.data?.redirect && res.data.redirect !== "none") {
+        console.log("redirecting to:", res.data.redirect);
         navigate(res.data.redirect);
       }
     } catch (err) {
-      console.log("Not logged in");
+      console.log("Not logged in or unauthorized");
     } finally {
       setHasCheckedLogin(true);
     }
@@ -30,7 +32,7 @@ useEffect(() => {
 }, [hasCheckedLogin, navigate]);
 
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 
   const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
   const [formData, setFormData] = useState({

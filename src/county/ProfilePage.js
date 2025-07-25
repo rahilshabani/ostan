@@ -51,14 +51,14 @@ function getCookie(name) {
   return cookieValue;
 }
 
-const logout = () => {
+  const logout = () => {
 
 
 const csrfToken = getCookie('csrftoken');
 
 axios.post(
-  `${API_BASE_URL}users/logout/`,
-  {}, 
+  `/users/logout/`,
+  {}, // body
   {
     headers: {
       'X-CSRFToken': csrfToken,
@@ -76,9 +76,8 @@ axios.post(
 });
 
 
+
 };
-
-
 
   const handleImageClick = () => {
     fileInputRef.current.click();

@@ -7,7 +7,7 @@ import ShowVisits from './ShowVisits';
 import Plot from './plot'; 
 import ManagerSTATUS from './managerStatus'
 import ChangePasswordForm from '../user/ChangePassword';
-
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
 
 const ProfilePage = () => {
