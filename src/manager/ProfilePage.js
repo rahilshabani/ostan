@@ -50,14 +50,14 @@ const logout = () => {
 const csrfToken = getCookie('csrftoken');
 
 axios.post(
-  'http://localhost:8000/users/logout/',
-  {}, // body، می‌تونه یه شی باشه
+  `${API_BASE_URL}/users/logout/`,
+  {}, // body
   {
     headers: {
       'X-CSRFToken': csrfToken,
       'Content-Type': 'application/json',
     },
-    withCredentials: true, // اگه از کوکی استفاده می‌کنی
+    withCredentials: true,
   }
 )
 .then(response => {
@@ -67,6 +67,7 @@ axios.post(
   const msg = error.response?.data?.error || error.message || 'خطای ناشناخته';
   console.error('❌ خطا:', msg);
 });
+
 
 
 };
