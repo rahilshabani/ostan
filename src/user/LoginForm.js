@@ -8,24 +8,26 @@ axios.defaults.withCredentials = true;
 
 const LoginForm = () => {
 const navigate = useNavigate();
+const [hasCheckedLogin, setHasCheckedLogin] = useState(false);
 
-    useEffect(() => {
-    // بررسی اینکه آیا کاربر لاگین است
-    const checkLoggedIn = async () => {
-      try {
-        const res = await axios.get("/users/me/");
-        if (res.data.redirect) {
-          console.log(res.data)
-          navigate(res.data.redirect);
-        }
-      } catch (err) {
-        // اگر کاربر لاگین نیست، کاری نکن
-        console.log("Not logged in");
+useEffect(() => {
+  if (hasCheckedLogin) return;
+
+  const checkLoggedIn = async () => {
+    try {
+      const res = await axios.get("/users/me/");
+      if (res.data && res.data.username) {
+        navigate(res.data.redirect);
       }
-    };
+    } catch (err) {
+      console.log("Not logged in");
+    } finally {
+      setHasCheckedLogin(true);
+    }
+  };
 
-    checkLoggedIn();
-  }, [navigate]);
+  checkLoggedIn();
+}, [hasCheckedLogin, navigate]);
 
 
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
@@ -41,7 +43,6 @@ const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
   const { username, password, rememberMe } = formData;
 
 
-  // const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

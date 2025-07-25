@@ -6,6 +6,7 @@ import ShowCities from './ShowCities';
 import ShowVisits from './ShowVisits';
 import Plot from './plot'; 
 import ManagerSTATUS from './managerStatus'
+
 axios.defaults.withCredentials = true;
 
 const ProfilePage = () => {
@@ -23,6 +24,57 @@ const ProfilePage = () => {
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
+
+
+
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Matches: csrftoken=value
+      if (cookie.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+const logout = () => {
+
+
+const csrfToken = getCookie('csrftoken');
+
+axios.post(
+  'http://localhost:8000/users/logout/',
+  {}, // body، می‌تونه یه شی باشه
+  {
+    headers: {
+      'X-CSRFToken': csrfToken,
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true, // اگه از کوکی استفاده می‌کنی
+  }
+)
+.then(response => {
+  navigate("/login");
+})
+.catch(error => {
+  const msg = error.response?.data?.error || error.message || 'خطای ناشناخته';
+  console.error('❌ خطا:', msg);
+});
+
+
+};
+
+
+
+
+
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -68,15 +120,7 @@ const ProfilePage = () => {
     fetchCities();
   }
 
-  const fetchStatus = () => {
-    axios.get(`${backendUrl}/users/status/`,{credentials: 'include'})
-      .then(response => {
-        setCities(response.data);
-      })
-      .catch(error => {
-        console.error("خطا در دریافت شهرستان ها", error);
-      });
-  };
+
 
   const fetchCities = () => {
     axios.get(`${backendUrl}/users/show/`,{credentials: 'include'})
@@ -88,18 +132,18 @@ const ProfilePage = () => {
       });
   };
 
-  const handleLogout = async () => {
-  try {
-    await axios.post("/users/logout/",{credentials: 'include'});
-  } catch (err) {
-    console.error("خطا در لاگ‌اوت سمت سرور:", err.response?.data);
-  } finally {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    axios.defaults.headers.common["Authorization"] = null;
-    navigate("/login");
-  }
-};
+//   const handleLogout = async () => {
+//   try {
+//     await axios.post("/users/logout/",{credentials: 'include'});
+//   } catch (err) {
+//     console.error("خطا در لاگ‌اوت سمت سرور:", err.response?.data);
+//   } finally {
+//     localStorage.removeItem("access_token");
+//     localStorage.removeItem("refresh_token");
+//     axios.defaults.headers.common["Authorization"] = null;
+//     navigate("/login");
+//   }
+// };
 
 
   const renderSection = () => {
@@ -293,7 +337,7 @@ const ProfilePage = () => {
 
        <button
   className="w-full text-right py-2 px-4 rounded-lg hover:bg-red-50"
-  onClick={handleLogout}
+  onClick={logout}
 >
   🔓 خروج
 </button>

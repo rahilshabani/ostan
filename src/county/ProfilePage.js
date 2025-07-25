@@ -19,7 +19,7 @@ const ProfilePage = () => {
   const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
   const [activeSection, setActiveSection] = useState('status');
   const [user, setUser] = useState(null);
-  const [programs, setPrograms] = useState([]);
+  // const [programs, setPrograms] = useState([]);
   const navigate = useNavigate();
   const [schools, setSchools] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,20 +28,55 @@ const ProfilePage = () => {
 
   const fileInputRef = useRef(null);
 
-  const handleLogout = async () => {
-  try {
-    const refreshToken = localStorage.getItem("refresh_token");
-    if (refreshToken) {
-      await axios.post("/users/logout/", { refresh: refreshToken });
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
+
+
+
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Matches: csrftoken=value
+      if (cookie.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
     }
-  } catch (err) {
-    console.error("Logout failed", err.response?.data);
-  } finally {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    delete axios.defaults.headers.common["Authorization"];
-    navigate("/login");
   }
+  return cookieValue;
+}
+
+const logout = () => {
+
+
+const csrfToken = getCookie('csrftoken');
+
+axios.post(
+  'http://localhost:8000/users/logout/',
+  {}, // body، می‌تونه یه شی باشه
+  {
+    headers: {
+      'X-CSRFToken': csrfToken,
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true, // اگه از کوکی استفاده می‌کنی
+  }
+)
+.then(response => {
+  console.log('✅ پاسخ سرور:', response.data);
+  alert(`پاسخ موفق: ${response.data.message}`);
+  navigate("/login");
+})
+.catch(error => {
+  const msg = error.response?.data?.error || error.message || 'خطای ناشناخته';
+  console.error('❌ خطا:', msg);
+  alert(`خطا: ${msg}`);
+});
+
+
 };
 
 
@@ -49,6 +84,8 @@ const ProfilePage = () => {
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
+
+ 
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -73,7 +110,6 @@ const ProfilePage = () => {
     }
   };
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
 
  useEffect(() => {
   const refreshToken = async () => {
@@ -342,7 +378,7 @@ const ProfilePage = () => {
 
         <button
           className="w-full text-right py-2 px-4 rounded-lg hover:bg-red-50"
-          onClick={handleLogout}
+          onClick={logout}
         >
           🔓 خروج
         </button>
