@@ -50,7 +50,7 @@ const logout = () => {
 const csrfToken = getCookie('csrftoken');
 
 axios.post(
-  `${API_BASE_URL}/users/logout/`,
+  `${API_BASE_URL}users/logout/`,
   {}, // body
   {
     headers: {
