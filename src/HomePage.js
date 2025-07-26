@@ -2,19 +2,22 @@ import { useState, useEffect } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { motion } from "framer-motion";
+import { Menu, X } from "lucide-react"; // برای آیکن‌های منو و بستن
 
 export default function HomePage() {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videos, setVideos] = useState([]);
   const [galleryImages, setGalleryImages] = useState([]);
   const [carouselImages, setCarouselImages] = useState([]);
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
-const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
+
   useEffect(() => {
     fetch(`${API_BASE_URL}media/api/videos/`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
         if (Array.isArray(data)) {
           setVideos(data);
         } else if (Array.isArray(data.results)) {
@@ -47,58 +50,68 @@ const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
       {/* Header */}
       <header className="text-white fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex justify-between items-center shadow-lg">
         <div className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img
-  src={LOGO_URL}
-  alt="لوگو"
-  className="w-10 h-10 rounded-full"
-/>
-<a href='/'>
-          <h1 className="text-xl font-bold">گروه کامپیوتر استان مازندران</h1>
-</a>
+          <img src={LOGO_URL} alt="لوگو" className="w-10 h-10 rounded-full" />
+          <a href="/">
+            <h1 className="text-xl font-bold">گروه کامپیوتر استان مازندران</h1>
+          </a>
         </div>
-<nav className="hidden md:flex flex-row-reverse space-x-6 space-x-reverse">
-  <a href="#" className="hover:text-yellow-300 transition font-bold">خانه</a>
-  <a href="/login/" className="hover:text-yellow-300 transition">پنل کاربری</a>
-  <a href="#" className="hover:text-yellow-300 transition">درباره ما</a>
-</nav>
 
+        {/* همبرگر منو برای موبایل */}
+        <div className="md:hidden">
+          <button onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
 
+        {/* منوی دسکتاپ */}
+        <nav className="hidden md:flex flex-row-reverse space-x-6 space-x-reverse">
+          <a href="#" className="hover:text-yellow-300 transition font-bold">خانه</a>
+          <a href="/login/" className="hover:text-yellow-300 transition">پنل کاربری</a>
+          <a href="#" className="hover:text-yellow-300 transition">درباره ما</a>
+        </nav>
       </header>
 
-    <div className="max-w-4xl mx-auto p-4 min-h-screen flex items-center justify-center">
-     
+      {/* منوی موبایل */}
+      {menuOpen && (
+        <div className="md:hidden absolute top-16 right-0 w-full bg-blue-700 text-white flex flex-col items-end px-6 py-4 space-y-4 z-40">
+          <a href="#" className="hover:text-yellow-300 font-bold">خانه</a>
+          <a href="/login/" className="hover:text-yellow-300">پنل کاربری</a>
+          <a href="#" className="hover:text-yellow-300">درباره ما</a>
+        </div>
+      )}
 
+      {/* Carousel */}
+      <div className="max-w-4xl mx-auto p-4 min-h-screen flex items-center justify-center">
         <div className="rounded-2xl overflow-hidden shadow-lg">
-{carouselImages.length > 0 && (
-  <Carousel
-    showThumbs={false}
-    infiniteLoop
-    autoPlay
-    interval={4000}
-    showStatus={false}
-    showArrows={false}
-    stopOnHover={false}
-    dynamicHeight={false}
-  >
-    {carouselImages.map((src, index) => (
-      <div key={index}>
-        <img
-          src={src}
-          alt={`slide-${index}`}
-          className="w-full object-cover"
-          style={{ maxHeight: "400px", height: "100%" }}
-        />
-      </div>
-    ))}
-  </Carousel>
-)}
-
+          {carouselImages.length > 0 && (
+            <Carousel
+              showThumbs={false}
+              infiniteLoop
+              autoPlay
+              interval={4000}
+              showStatus={false}
+              showArrows={false}
+              stopOnHover={false}
+              dynamicHeight={false}
+            >
+              {carouselImages.map((src, index) => (
+                <div key={index}>
+                  <img
+                    src={src}
+                    alt={`slide-${index}`}
+                    className="w-full object-cover"
+                    style={{ maxHeight: "400px", height: "100%" }}
+                  />
+                </div>
+              ))}
+            </Carousel>
+          )}
         </div>
       </div>
 
       {/* Video Intro */}
       <section className="flex flex-col justify-center items-center px-4 py-16 bg-gradient-to-b from-black via-slate-900 to-slate-800">
-        <h2 className="text-3xl font-bold mb-6 text-center">ویدئوی معرفی</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-white">ویدئوی معرفی</h2>
         <div className="w-full max-w-6xl h-[75vh] rounded-2xl overflow-hidden shadow-2xl">
           <iframe
             className="w-full h-full"
@@ -164,7 +177,7 @@ const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
 
       {/* Footer */}
       <footer className="text-center py-6 bg-gradient-to-l from-blue-900 to-blue-700 backdrop-blur-sm mt-12">
-        <p className="text-sm">
+        <p className="text-sm text-white">
           © {new Date().getFullYear()} گروه کامپیوتر مازندران. تمام حقوق محفوظ است.
         </p>
       </footer>

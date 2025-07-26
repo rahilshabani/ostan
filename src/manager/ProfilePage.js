@@ -47,7 +47,7 @@ function getCookie(name) {
 
   const logout = () => {
 
-
+alert("hiiiiiiii")
 const csrfToken = getCookie('csrftoken');
 
 axios.post(
