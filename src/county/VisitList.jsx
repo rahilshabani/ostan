@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import mazandaranCounties from '../data/mazandaranCounties';
 
-axios.defaults.withCredentials = true;
 
-const COLORS = ['#00C49F', '#FF8042']; // موفق / ناموفق
+const COLORS = ['#00C49F', '#FF8042'];
 
 function parseJalaliDate(jalaliStr) {
   if (!jalaliStr) return 0;
@@ -47,12 +46,11 @@ const VisitList = ({ user, refreshKey }) => {
   const [visits, setVisits] = useState([]);
   const [sortByVisitTime, setSortByVisitTime] = useState(false);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://rahilshabani.pythonanywhere.com/';
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${backendUrl}/programs/visits/`);
+        const res = await axios.get(`/programs/visits/`);
         const filtered = res.data.filter((v) => v.county === user.county);
 
         const sorted = filtered
@@ -103,6 +101,7 @@ const VisitList = ({ user, refreshKey }) => {
   }, [user, refreshKey, sortByVisitTime]);
 
   const handleDownload = (fileUrl) => {
+    const backendUrl = process.env.REACT_APP_BACKEND_URL.replace(/\/$/, '');
     const downloadUrl = fileUrl.startsWith('http') ? fileUrl : `${backendUrl}${fileUrl}`;
     window.open(downloadUrl, '_blank');
   };
@@ -112,7 +111,7 @@ const VisitList = ({ user, refreshKey }) => {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`${backendUrl}/programs/delete_visit/`, {
+      await axios.delete(`/programs/delete_visit/`, {
         data: { file_url: fileUrl },
       });
 

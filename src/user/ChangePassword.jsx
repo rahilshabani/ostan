@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import { useNavigate } from "react-router-dom";
 
 
@@ -27,9 +27,6 @@ const ChangePasswordForm = () => {
         {
           old_password: oldPassword,
           new_password: newPassword,
-        },
-        {
-          withCredentials: true,
         }
       );
       setOldPassword('');
@@ -47,51 +44,14 @@ const ChangePasswordForm = () => {
   };
 
 
-  
-
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      // Matches: csrftoken=value
-      if (cookie.startsWith(name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
-
-  const logout = () => {
-
-
-const csrfToken = getCookie('csrftoken');
-
-axios.post(
-  `/users/logout/`,
-  {}, // body
-  {
-    headers: {
-      'X-CSRFToken': csrfToken,
-      'Content-Type': 'application/json',
-    },
-    withCredentials: true,
-  }
-)
-.then(response => {
+ const logout = () => {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  sessionStorage.removeItem("access_token");
+  sessionStorage.removeItem("refresh_token");
   navigate("/login");
-})
-.catch(error => {
-  const msg = error.response?.data?.error || error.message || 'خطای ناشناخته';
-  console.error('❌ خطا:', msg);
-});
-
-
-
 };
+
 
 
 

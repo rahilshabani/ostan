@@ -1,34 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import mazandaranCounties from '../data/mazandaranCounties';
 import degrees from '../data/degrees';
-axios.defaults.withCredentials = true;
+
 
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({});
-  const [profileImage, setProfileImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
-
-  useEffect(() => {
-    // const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
-
-    axios.get(`${backendUrl}/users/profile/`, {
-      withCredentials: true
-      // headers: {
-      //   'Authorization': `Bearer ${token}`
-      // }
-    })
+ // گرفتن اطلاعات کاربر
+useEffect(() => {
+  axios.get(`/users/profile/`)
     .then(response => {
       setUser(response.data);
       setFormData(response.data);
-      console.log("fist data:",response.data)
+      console.log("first data:", response.data);
     })
     .catch(error => {
       console.error(error.response);
@@ -36,24 +26,31 @@ const Profile = () => {
         setError("دسترسی غیرمجاز. لطفاً دوباره وارد شوید.");
       }
     });
-  }, [backendUrl]);
+}, []);
+
+useEffect(() => {
+  if (success) {
+    const timer = setTimeout(() => setSuccess(''), 4000);
+    return () => clearTimeout(timer);
+  }
+}, [success]);
+
+useEffect(() => {
+  if (error) {
+    const timer = setTimeout(() => setError(''), 4000);
+    return () => clearTimeout(timer);
+  }
+}, [error]);
+
+
+
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setProfileImage(file);
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSave = () => {
     if (!formData.username || !formData.first_name || !formData.last_name) {
@@ -66,15 +63,8 @@ const Profile = () => {
       formDataToSend.append(key, formData[key]);
     });
  
- 
-    // const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
 
-    axios.put(`${backendUrl}/users/profile/`, formDataToSend, {withCredentials: true
-      // headers: {
-      //   'Authorization': `Bearer ${token}`,
-      //   'Content-Type': 'multipart/form-data'
-      // }
-    })
+    axios.put(`/users/profile/`, formDataToSend)
     .then(response => {
       setUser(response.data);
       console.log("user profile:", response.data)
@@ -82,8 +72,6 @@ const Profile = () => {
       setEditMode(false);
       setSuccess('پروفایل با موفقیت به‌روزرسانی شد.');
       setError('');
-      setPreviewImage(null);
-      setProfileImage(null);
     })
     .catch(error => {
       console.error(error.response);
@@ -109,14 +97,13 @@ const Profile = () => {
       <div>
           <label className="block text-gray-700">استان محل خدمت</label>
           <select
-            name="province"
-            value={formData.degree || ""}
-            onChange={handleChange}
-            disabled="true"
-            className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <option value="mazandaran">مازندران</option>
-          </select>
+  name="province"
+  value="mazandaran"
+  disabled={true}
+  className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+>
+  <option value="mazandaran">مازندران</option>
+</select>
         </div>
     
         <div>
@@ -124,7 +111,7 @@ const Profile = () => {
    <select
         name="county"
         value={formData.county || ""}
-        disabled="true"
+        disabled={true}
         onChange={handleChange}
         className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
@@ -146,7 +133,7 @@ const Profile = () => {
          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
         <InputField label="نام سرگروه" name="first_name" value={formData.first_name} onChange={handleChange} disabled={!editMode} />
         <InputField label="نام خانوادگی سرگروه" name="last_name" value={formData.last_name} onChange={handleChange} disabled={!editMode} />
-        <InputField label="شماره تماس سرگروه" name="phone" value={formData.phone} onChange={handleChange} disabled={!editMode} />
+        <InputField label="شماره تماس سرگروه" name="phone" type='tel' value={formData.phone} onChange={handleChange} disabled={!editMode} />
         </div>
    
   <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
@@ -180,8 +167,6 @@ const Profile = () => {
             </button>
             <button onClick={() => {
               setEditMode(false);
-              setPreviewImage(null);
-              setProfileImage(null);
             }} className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
               لغو
             </button>

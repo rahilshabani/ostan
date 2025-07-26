@@ -1,29 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import mazandaranCounties from '../data/mazandaranCounties';
 
-axios.defaults.withCredentials = true;
 
-const COLORS = ['#00C49F', '#FF8042']; // رنگ‌ها: موفق / ناموفق
+const COLORS = ['#00C49F', '#FF8042'];
 
 const ShowVisits = () => {
   const [cities, setCities] = useState([]);
   const [visits, setVisits] = useState([]);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://rahilshabani.pythonanywhere.com/';
-
   useEffect(() => {
-    axios.get(`${backendUrl}/programs/visits/`)
-      .then(res => setVisits(res.data))
-      .catch(err => console.error('خطا در دریافت بازدیدها:', err));
+  Promise.all([
+    axios.get(`/programs/visits/`),
+    axios.get(`/users/show/`)
+  ])
+    .then(([visitsRes, citiesRes]) => {
+      setVisits(visitsRes.data);
+      setCities(citiesRes.data);
+    })
+    .catch(err => {
+      console.error('خطا در دریافت داده‌ها:', err);
+    });
+}, []);
 
-    axios.get(`${backendUrl}/users/show/`)
-      .then(res => setCities(res.data))
-      .catch(err => console.error('خطا در دریافت شهرستان‌ها:', err));
-  }, []);
+
+  // useEffect(() => {
+  //   axios.get(`/programs/visits/`)
+  //     .then(res => setVisits(res.data))
+  //     .catch(err => console.error('خطا در دریافت بازدیدها:', err));
+
+  //   axios.get(`/users/show/`)
+  //     .then(res => setCities(res.data))
+  //     .catch(err => console.error('خطا در دریافت شهرستان‌ها:', err));
+  // }, []);
 
   const handleDownload = (fileUrl) => {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://rahilshabani.pythonanywhere.com/';
     const downloadUrl = fileUrl.startsWith('http') ? fileUrl : `${backendUrl}${fileUrl}`;
     window.open(downloadUrl, '_blank');
   };
@@ -55,17 +68,20 @@ const ShowVisits = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 justify-items-center">
                     {cityVisits.map((visit) =>
                       visit.visits.map((file, i) => {
+                       const success = typeof file.success_percent === 'number' ? file.success_percent : 0;
                         const chartData = [
-                          { name: 'موفق', value: file.success_percent },
-                          { name: 'ناموفق', value: 100 - file.success_percent },
+                          { name: 'موفق', value: success },
+                          { name: 'ناموفق', value: 100 - success },
                         ];
+
 
                         return (
                           <div
                             key={i}
                             onClick={() => handleDownload(file.file_url)}
                             title="برای دانلود کلیک کنید"
-                            className="relative w-[140px] h-[140px] cursor-pointer transition hover:scale-105"
+                           className="relative w-[120px] sm:w-[140px] h-[120px] sm:h-[140px] cursor-pointer transition hover:scale-105"
+
                           >
                             <PieChart width={140} height={140}>
                               <Pie
@@ -83,13 +99,13 @@ const ShowVisits = () => {
                                   <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
                                 ))}
                               </Pie>
-                              <Tooltip />
+                              <Tooltip formatter={(value) => `${value}%`} />
                             </PieChart>
 
-                            {/* متن وسط نمودار */}
-                            <div className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-gray-700 text-center px-2 leading-tight break-words">
+                           <div className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-gray-700 text-center px-2 leading-tight break-words truncate">
                               {file.school_name}
                             </div>
+
                           </div>
                         );
                       })

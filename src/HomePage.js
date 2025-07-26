@@ -1,34 +1,24 @@
 import { useState, useEffect } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react"; // برای آیکن‌های منو و بستن
+import { Menu, X } from "lucide-react"; 
+import axios from './axiosInstance';
 
 export default function HomePage() {
-  const [videoLoaded, setVideoLoaded] = useState(false);
   const [videos, setVideos] = useState([]);
   const [galleryImages, setGalleryImages] = useState([]);
   const [carouselImages, setCarouselImages] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
-  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
+  const BASE_MEDIA_URL = API_BASE_URL.replace("/api", "");
+  const LOGO_URL = `${BASE_MEDIA_URL}media/base/logo.png`;
 
-  useEffect(() => {
-    fetch(`${API_BASE_URL}media/api/videos/`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setVideos(data);
-        } else if (Array.isArray(data.results)) {
-          setVideos(data.results);
-        } else {
-          console.warn("ساختار پاسخ ویدیو نامعتبر است:", data);
-          setVideos([]);
-        }
-      })
-      .catch((err) => console.error("خطا در دریافت ویدیوها:", err));
-  }, []);
+useEffect(() => {
+  axios.get("media/api/videos/")
+    .then((res) => setVideos(res.data.results || res.data || []))
+    .catch((err) => console.error("خطا:", err));
+}, []);
 
   useEffect(() => {
     fetch(`${API_BASE_URL}media/api/gallery/`)
@@ -50,7 +40,7 @@ export default function HomePage() {
       {/* Header */}
       <header className="text-white fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex justify-between items-center shadow-lg">
         <div className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src={LOGO_URL} alt="لوگو" className="w-10 h-10 rounded-full" />
+          <img src={LOGO_URL} alt="لوگو" className="w-10 h-10 rounded-full" loading="lazy" />
           <a href="/">
             <h1 className="text-xl font-bold">گروه کامپیوتر استان مازندران</h1>
           </a>
@@ -65,7 +55,7 @@ export default function HomePage() {
 
         {/* منوی دسکتاپ */}
         <nav className="hidden md:flex flex-row-reverse space-x-6 space-x-reverse">
-          <a href="#" className="hover:text-yellow-300 transition font-bold">خانه</a>
+          <a href="/" className="hover:text-yellow-300 transition font-bold">خانه</a>
           <a href="/login/" className="hover:text-yellow-300 transition">پنل کاربری</a>
           <a href="#" className="hover:text-yellow-300 transition">درباره ما</a>
         </nav>
@@ -74,7 +64,7 @@ export default function HomePage() {
       {/* منوی موبایل */}
       {menuOpen && (
         <div className="md:hidden absolute top-16 right-0 w-full bg-blue-700 text-white flex flex-col items-end px-6 py-4 space-y-4 z-40">
-          <a href="#" className="hover:text-yellow-300 font-bold">خانه</a>
+          <a href="/" className="hover:text-yellow-300 font-bold">خانه</a>
           <a href="/login/" className="hover:text-yellow-300">پنل کاربری</a>
           <a href="#" className="hover:text-yellow-300">درباره ما</a>
         </div>
@@ -98,6 +88,7 @@ export default function HomePage() {
                 <div key={index}>
                   <img
                     src={src}
+                    loading="lazy"
                     alt={`slide-${index}`}
                     className="w-full object-cover"
                     style={{ maxHeight: "400px", height: "100%" }}
@@ -119,7 +110,6 @@ export default function HomePage() {
             title="ویدئو معرفی"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            onLoad={() => setVideoLoaded(true)}
           ></iframe>
         </div>
       </section>
@@ -161,6 +151,7 @@ export default function HomePage() {
           {Array.isArray(galleryImages) && galleryImages.length > 0 ? (
             galleryImages.map((img) => (
               <img
+              loading="lazy"
                 key={img.id}
                 src={img.image_url}
                 alt={img.title}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import Step1SchoolCode from './Step1SchoolCode';
 import Step2SchoolInfo from './Step2SchoolInfo';
 import Step3StaffInfo from './Step3StaffInfo';
@@ -15,7 +15,6 @@ import Step65WorkshopAssessment from './Step6-5WorkshopAssessment';
 import Step66WorkshopAssessment from './Step6-6WorkshopAssessment';
 import Step67WorkshopAssessment from './Step6-7WorkshopAssessment';
 import Step68WorkshopAssessment from './Step6-8WorkshopAssessment';
-import Step7SummarySubmit from './Step7SummarySubmit';
 import Step8ClinicalSupervisionForm from './Step8ClinicalSupervisionForm';
 import AssessmentItem from './Step7Balini';
 import { toJalaali } from 'jalaali-js';
@@ -433,7 +432,7 @@ const handleAssessmentChange = (itemId, field, value) => {
     setLoading(true);
     setError(null);
     
-    axios.post(`${backendUrl}/programs/school-visits/`, {
+    axios.post(`/programs/school-visits/`, {
   ...formData,
   county: user.county,
   area: user.area,
@@ -471,8 +470,7 @@ const handleAssessmentChange = (itemId, field, value) => {
     setLoading(true);
 
     try {
-      const response = await axios.get(`${backendUrl}/users/schools/${code}`, {
-      });
+      const response = await axios.get(`/users/schools/${code}`);
       const schoolInfo = response.data;
       console.log("schoolInfo",schoolInfo)
       setFormData(prev => ({

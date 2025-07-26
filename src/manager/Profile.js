@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import degrees from '../data/degrees';
-axios.defaults.withCredentials = true;
-
 
 const Profile = ({ id, onDelete }) => {
 
@@ -11,12 +9,11 @@ const Profile = ({ id, onDelete }) => {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
 
 useEffect(() => {
 
 
-  axios.get(`${backendUrl}/users/profile/${id}/`)
+  axios.get(`/users/profile/${id}/`)
   .then(response => {
     setUser(response.data);
     setFormData({ ...response.data, password: '' });
@@ -25,7 +22,7 @@ useEffect(() => {
     console.error(error.response);
     setError("خطا در دریافت اطلاعات کاربر.");
   });
-}, [backendUrl, id]);
+}, [id]);
 
 
 
@@ -38,7 +35,7 @@ const handleResetPassword = async () => {
   try {
 
   const response = await axios.post(
-  `${backendUrl}users/reset-password/`,
+  `/users/reset-password/`,
   {
     user_id: formData.id,
     code: formData.code,
@@ -75,7 +72,7 @@ const handelDeleteThisCounty = async () => {
  
 
   const response = await axios.post(
-  `${backendUrl}users/delete/`,
+  `/users/delete/`,
   {
     user_id: formData.id,
   }
@@ -113,11 +110,9 @@ const handelDeleteThisCounty = async () => {
     });
  
 
-    // const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
     console.log("form: ", formDataToSend)
-    axios.put(`${backendUrl}/users/profile/${id}/`, formDataToSend, {
+    axios.put(`/users/profile/${id}/`, formDataToSend, {
       headers: {
-        // 'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
       }
     })

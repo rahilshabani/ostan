@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import FileUploadBox from './FileUploadBox';
-import UploadModalTeacher from './UploadModal_Teacher';
-import UploadModalStudent from './UploadModal_Student';
-import UploadModalBoth from './UploadModal_Both';
 import UploadModal from './UploadModal';
 import SchoolVisitButtonWithModal from './SchoolVisitButtonWithModal';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import VisitList from '../county/VisitList';
 
 
@@ -14,7 +11,6 @@ const FileUploadPage = ({ audience = "both", user }) => {
   const [showModal, setShowModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
 
   const handleFileAccepted = (file) => {
     setUploadedFile(file);
@@ -40,11 +36,7 @@ const FileUploadPage = ({ audience = "both", user }) => {
     });
   
     try {
-      await axios.post(`${backendUrl}/programs/upload_file/`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      await axios.post(`/programs/upload_file/`, data);
       alert('فایل با موفقیت ارسال شد');
       setShowModal(false);
       setUploadedFile(null);
@@ -70,6 +62,7 @@ const FileUploadPage = ({ audience = "both", user }) => {
 <div className="w-full px-4 mb-4 flex justify-end">
   <button
     onClick={() => {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
       const downloadUrl = `${backendUrl}/media/base/kham.xlsx`;
       window.open(downloadUrl, '_blank');
     }}

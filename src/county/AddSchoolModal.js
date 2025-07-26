@@ -1,37 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
+import axios from '../axiosInstance';
+import { useNavigate } from "react-router-dom";
 
 const AddSchoolModal = ({ isOpen, onClose, county, area }) => {
-  // alert(county)
-const [schools, setSchools] = useState([]);
-  useEffect(() => {
+const navigate = useNavigate();
+const [success, setSuccess] = useState('');
+const [error, setError] = useState('');
+
+useEffect(() => {
   if (isOpen) {
-    setFormData({
-        name: '',
-        code: '',
-        area: '',
-        county: county,
-        phone: '',
-        gb: 'girl',
-        sch_type: 'dolati',
-        branch: 'fani',
-    });
+    setFormData(prev => ({
+      ...prev,
+      county: county,
+      area: area,
+    }));
+  }
+}, [isOpen, county, area]);
 
 
+useEffect(() => {
+  if (success) {
+    const timer = setTimeout(() => setSuccess(''), 4000);
+    return () => clearTimeout(timer);
+  }
+}, [success]);
+
+useEffect(() => {
+  if (!isOpen) {
+    setError('');
+    setSuccess('');
   }
 }, [isOpen]);
 
-  const [formData, setFormData] = useState({
-      name: '',
-      code: '',
-      area: area,
-      county: county,
-      phone: '',
-      gb: 'girl',
-      sch_type: 'dolati',
-      branch: 'fani',
-  });
+
+useEffect(() => {
+  const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+  if (!token) {
+    console.error("No access token found!");
+    navigate("/login");
+    return;
+  }
+
+  axios.get(`/users/profile/`)
+    .then(response => {
+      // setUser(response.data);
+      setFormData(response.data);
+      console.log("first data:", response.data);
+    })
+    .catch(error => {
+      console.error(error.response);
+      if (error.response && error.response.status === 401) {
+        setError("دسترسی غیرمجاز. لطفاً دوباره وارد شوید.");
+        navigate("/login"); // اگر توکن هست ولی سرور باز هم 401 داد
+      }
+    });
+}, []);
+
+
+const [formData, setFormData] = useState({
+  name: '',
+  code: '',
+  area: '',
+  county: '',
+  phone: '',
+  gb: 'girl',
+  sch_type: 'dolati',
+  branch: 'fani',
+});
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,36 +76,37 @@ const [schools, setSchools] = useState([]);
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  //  const dataToSend = {
-  //   ...formData,
-  //   county: county
-  // };
   try {
-    const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
-
-    if (!token) {
-      console.error("No access token found!");
-      return;
-    }
-    
-
-
     const response = await axios.post(
-      `${backendUrl}/users/school/register/`,
+      `/users/school/register/`,
       formData,
       {
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
       }
     );
 
-    console.log("ثبت موفق:", response.data);
-    onClose(formData);
+    setSuccess("هنرستان با موفقیت ثبت شد");
+    setError("");
+
+   setFormData({
+  name: '',
+  code: '',
+  area: '',
+  county: '',
+  phone: '',
+  gb: 'girl',
+  sch_type: 'dolati',
+  branch: 'fani',
+});
+onClose();
+
 
   } catch (error) {
-    console.error("خطا در ثبت‌نام:", error.response?.data || error.message);
+    setError("ثبت هنرستان با خطا مواجه شد");
+    setSuccess("");
+
   }
 };
 
@@ -78,13 +115,16 @@ const handleSubmit = async (e) => {
 
 return (
   <>
+
+
     <div
       className="fixed inset-0 bg-black bg-opacity-50 z-40"
-      onClick={onClose}
     ></div>
 
     <div className="fixed inset-10 md:inset-20 z-50 bg-white rounded-lg shadow-xl overflow-auto">
       <div className="relative p-6 max-w-4xl mx-auto">
+          {error && <div className="text-red-600 mb-4">{error}</div>}
+          {success && <div className="text-green-600 mb-4">{success}</div>}
         <button
           onClick={onClose}
           className="text-gray-400 hover:text-red-500 text-3xl font-bold absolute top-4 left-4"

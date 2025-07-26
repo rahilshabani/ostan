@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axiosInstance';
 import mazandaranCounties from '../data/mazandaranCounties';
-axios.defaults.withCredentials = true;
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://rahilshabani.pythonanywhere.com/';
+
 
 const AddCityModal = ({ isOpen, onClose }) => {
-const [cities, setCities] = useState([]);
-  useEffect(() => {
+
+useEffect(() => {
   if (isOpen) {
     setFormData({
       county: '',
@@ -15,18 +14,9 @@ const [cities, setCities] = useState([]);
       code: '',
       area: '',
     });
-
-
-    axios.get(`${backendUrl}users/cities/`)
-  .then((response) => {
-    setCities(response.data);
-  })
-  .catch((error) => {
-    console.error("خطا در دریافت شهرها:", error);
-  });
-
   }
 }, [isOpen]);
+
 
   const [formData, setFormData] = useState({
     county: '',
@@ -46,8 +36,9 @@ const [cities, setCities] = useState([]);
     
     e.preventDefault();
    try {
-  const response = await axios.post(`${backendUrl}manager/register/`, formData);
-  onClose(formData);
+  const response = await axios.post(`/manager/register/`, formData);
+  onClose();
+  alert("شهر با موفقیت ثبت شد.");
 } catch (error) {
   console.error("خطا در ثبت‌نام:", error.response?.data);
   alert("اشتباهی رخ داده است");
@@ -59,10 +50,12 @@ const [cities, setCities] = useState([]);
 
   return (
     <>
-      <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40"
-        onClick={onClose}
-      ></div>
+     <div
+  className="fixed inset-0 bg-black bg-opacity-50 z-40"
+  onClick={(e) => {
+    if (e.target === e.currentTarget) onClose();
+  }}
+/>
 
       <div className="fixed inset-20 z-50 bg-white overflow-auto">
         <div className="p-6 max-w-4xl mx-auto relative">

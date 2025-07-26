@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from '../axiosInstance';
 import Profile from './Profile';
 import FileUploadPage from '../programs/FileUploadPage';
 import mazandaranCounties from '../data/mazandaranCounties';
@@ -12,16 +12,12 @@ import ReChart from '../manager/rechart';
 import ChangePasswordForm from '../user/ChangePassword';
 
 
-axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
-axios.defaults.withCredentials = true;
-
 
 const ProfilePage = () => {
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
-  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
+  const LOGO_URL = API_BASE_URL ? `${API_BASE_URL.replace("/api", "")}media/base/logo.png` : "/media/base/logo.png";
   const [activeSection, setActiveSection] = useState('status');
   const [user, setUser] = useState(null);
-  // const [programs, setPrograms] = useState([]);
   const navigate = useNavigate();
   const [schools, setSchools] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,54 +26,18 @@ const ProfilePage = () => {
 
   const fileInputRef = useRef(null);
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
 
 
 
-
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      // Matches: csrftoken=value
-      if (cookie.startsWith(name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
-
-  const logout = () => {
-
-
-const csrfToken = getCookie('csrftoken');
-
-axios.post(
-  `/users/logout/`,
-  {}, // body
-  {
-    headers: {
-      'X-CSRFToken': csrfToken,
-      'Content-Type': 'application/json',
-    },
-    withCredentials: true,
-  }
-)
-.then(response => {
+const logout = () => {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  sessionStorage.removeItem("access_token");
+  sessionStorage.removeItem("refresh_token");
   navigate("/login");
-})
-.catch(error => {
-  const msg = error.response?.data?.error || error.message || 'خطای ناشناخته';
-  console.error('❌ خطا:', msg);
-});
-
-
-
 };
+
+
 
   const handleImageClick = () => {
     fileInputRef.current.click();
@@ -95,7 +55,7 @@ axios.post(
     formData.append('profile_image', file);
 
     try {
-      const res = await axios.patch("/users/change_picture/", formData, {
+      const res = await axios.patch(`users/change_picture/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -110,33 +70,51 @@ axios.post(
 
 
  useEffect(() => {
-  const refreshToken = async () => {
-    try {
-      await axios.post("/users/refresh/");
-    } catch (err) {
-      console.error("Refresh failed", err.response?.data);
-      throw err; // اگر رفرش شکست خورد، خطا پرتاب می‌کنیم
-    }
-  };
+      const refreshToken = async () => {
+      try {
+        const refresh = localStorage.getItem("refresh_token") || sessionStorage.getItem("refresh_token");
+        if (!refresh) throw new Error("Refresh token not found");
+
+        const res = await axios.post(`/users/refresh/`, { refresh });
+
+        const { access, refresh: newRefresh } = res.data;
+
+        if (access) {
+          localStorage.setItem("access_token", access);
+          sessionStorage.setItem("access_token", access);
+        }
+
+        if (newRefresh) {
+          localStorage.setItem("refresh_token", newRefresh);
+          sessionStorage.setItem("refresh_token", newRefresh);
+        }
+
+      } catch (err) {
+        console.error("Refresh failed", err.response?.data);
+        throw err;
+      }
+    };
 
   const getProfile = async () => {
     try {
-      const res = await axios.get("/users/profile/");
+      const res = await axios.get(`/users/profile/`);
       console.log("User:", res.data);
       setUser(res.data);
     } catch (err) {
       if (err.response?.status === 401) {
+
         try {
-          await refreshToken(); // تلاش برای رفرش
-          const res = await axios.get("/users/profile/"); // دوباره گرفتن پروفایل
-          setUser(res.data);
-        } catch (refreshError) {
-          console.error("Refresh token failed", refreshError.response?.data);
-          navigate("/login"); // اگر رفرش هم شکست خورد => هدایت به لاگین
-        }
+  await refreshToken();
+  const res = await axios.get(`/users/profile/`);
+  setUser(res.data);
+} catch (refreshError) {
+  console.error("خطا در تمدید توکن", refreshError);
+  navigate("/login");
+}
+
       } else {
         console.error("Unauthorized", err.response?.data);
-        navigate("/login"); // سایر خطاها هم => هدایت به لاگین
+        navigate("/login"); 
       }
     }
   };
@@ -146,33 +124,40 @@ axios.post(
 
 
   const handelChangeProfile = () => {
-    fetchSchools();
-  }
+  if (user) fetchSchools();
+};
 
-  const fetchSchools = () => {
-    axios.get(`${backendUrl}/users/school/show/`, {
-      withCredentials: true,
-      params: { county: user.county },
-    })
-      .then(response => {
-        console.log('داده‌های برگشتی از سرور:', response.data);
-        setSchools(response.data);
-      })
-      .catch(error => {
-        console.error("خطا در دریافت هنرستان ها", error);
-      });
-  };
+
+ const fetchSchools = () => {
+  if (!user?.county) return;
+  axios.get(`users/school/show/`, {
+    params: { county: user.county },
+  })
+  .then(response => {
+    console.log('داده‌های برگشتی از سرور:', response.data);
+    setSchools(response.data);
+  })
+  .catch(error => {
+    console.error("خطا در دریافت هنرستان ها", error);
+  });
+};
+
+
+  if (!user) {
+  return <div className="w-full h-screen flex justify-center items-center text-lg">در حال بارگذاری اطلاعات کاربر...</div>;
+}
+
 
   const renderSection = () => {
     switch (activeSection) {
       case 'status':
-        var x = backendUrl + "/users/status/1"
+        var x = API_BASE_URL + "/users/status/1"
         if (!user) return <div className="text-center p-4">در حال بارگذاری...</div>;
         var area = "";
         if (user.area && user.area !== "") {
           area = " " + user.area;
         }
-        var ct = mazandaranCounties[user.county] + area;
+        const ct = mazandaranCounties[user.county] + area;
         return (
           <div className="pt-20">
             <ReChart title={`نمودار وضعیت شهرستان ${mazandaranCounties[user.county]} از منظر تعداد بازدید`} apiUrl={x} county={ct} />
@@ -209,12 +194,15 @@ axios.post(
       case 'iranhooshmand':
         return (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Plot valueKey="iranhooshmand1Value" title="سومین جشنواره ایران هوشمند - محور 1" admin="false" />
-            <Plot valueKey="iranhooshmand2Value" title="سومین جشنواره ایران هوشمند - محور 2" admin="false" />
-            <Plot valueKey="iranhooshmand3Value" title="سومین جشنواره ایران هوشمند - محور 3" admin="false" />
-            <Plot valueKey="iranhooshmand4Value" title="سومین جشنواره ایران هوشمند - محور 4" admin="false" />
-            <Plot valueKey="iranhooshmand5Value" title="سومین جشنواره ایران هوشمند - محور 5" admin="false" />
-            <Plot valueKey="iranhooshmand6Value" title="سومین جشنواره ایران هوشمند - محور 6" admin="false" />
+            {['1','2','3','4','5','6'].map(axis => (
+              <Plot 
+                key={axis} 
+                valueKey={`iranhooshmand${axis}Value`} 
+                title={`سومین جشنواره ایران هوشمند - محور ${axis}`} 
+                admin="false" 
+              />
+            ))}
+
           </div>
         );
 
@@ -270,7 +258,7 @@ axios.post(
         onChange={handleFileChange}
       />
 
-      {/* Hamburger button (mobile only) */}
+   
       <button
         className="md:hidden fixed top-4 right-4 z-50 p-2 rounded bg-blue-500 text-white shadow"
         onClick={() => setSidebarOpen(true)}
@@ -278,7 +266,6 @@ axios.post(
         ☰
       </button>
 
-      {/* Backdrop */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
@@ -304,7 +291,7 @@ axios.post(
         {user ? (
           <div className="flex flex-col items-center space-y-2 mb-6">
             <img
-              src={user?.profile_image ? `${backendUrl}${user.profile_image}` : `${backendUrl}/media/base/default-avatar.png`}
+              src={user?.profile_image ? `${API_BASE_URL}${user.profile_image}` : `${API_BASE_URL}/media/base/default-avatar.png`}
               alt={user.username}
               className="w-20 h-20 object-cover rounded-full border-2 border-gray-300 cursor-pointer mt-10"
               onClick={handleImageClick}

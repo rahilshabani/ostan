@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-axios.defaults.withCredentials = true;
+import axios from '../axiosInstance';
 const SchoolProfile = ({ id , onDelete }) => {
   const [school, setSchool] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name: '',
+    code: '',
+    phone: '',
+    gb: '',
+    sch_type: '',
+    branch: '',
+  });
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
-
+ 
   useEffect(() => {
-    // const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
 
-    axios.get(`${backendUrl}/users/school/profile/${id}`, {
-      // headers: {
-      //   'Authorization': `Bearer ${token}`
-      // }
-    })
+    axios.get(`/users/school/profile/${id}`)
     .then(response => {
       setSchool(response.data);
       setFormData(response.data);
@@ -30,21 +31,15 @@ const SchoolProfile = ({ id , onDelete }) => {
         setError("خطا در بارگذاری اطلاعات.");
       }
     });
-  }, [id, backendUrl]);
+  }, [id]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
 const handleSave = () => {
-  // const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
 
-  axios.put(`${backendUrl}/users/school/profile/${id}/`, formData, {
-    headers: {
-      // 'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
-  })
+  axios.put(`/users/school/profile/${id}/`, formData)
   .then(response => {
     setSchool(response.data);
     setFormData(response.data);
@@ -53,10 +48,14 @@ const handleSave = () => {
     setError('');
   })
   .catch(error => {
-    console.error(error);
-    setError('خطا در به‌روزرسانی پروفایل. لطفا دوباره تلاش کنید.');
-    setSuccess('');
-  });
+  if (error.response) {
+    setError(error.response.data.detail || 'خطا در به‌روزرسانی پروفایل.');
+  } else {
+    setError('خطا در ارتباط با سرور.');
+  }
+  setSuccess('');
+});
+
 };
 
 
@@ -69,7 +68,7 @@ const handelDeleteThisCounty = async () => {
 
   try {
     const response = await axios.post(
-      `${backendUrl}users/delete-county/`,
+      `/users/delete-county/`,
       {
         user_id: formData.id,
       }
@@ -79,11 +78,12 @@ const handelDeleteThisCounty = async () => {
     onDelete(formData.id);
 
   } catch (error) {
-    if (error.response) {
-      setError(error.response.data.detail || 'خطا در حذف هنرستان');
-    } else {
-      setError('خطا در ارتباط با سرور.');
-    }
+      if (error.response) {
+    setError(error.response.data.detail || 'خطا در به‌روزرسانی پروفایل.');
+  } else {
+    setError('خطا در ارتباط با سرور.');
+  }
+  setSuccess('');
   }
 };
 

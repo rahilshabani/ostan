@@ -1,14 +1,13 @@
 import React, { useState, useEffect , useRef } from 'react';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from '../axiosInstance';
 import AddCityModal from './AddCityModal';
 import ShowCities from './ShowCities';
 import ShowVisits from './ShowVisits';
 import Plot from './plot'; 
 import ManagerSTATUS from './managerStatus'
 import ChangePasswordForm from '../user/ChangePassword';
-axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
-axios.defaults.withCredentials = true;
+
 
 const ProfilePage = () => {
   const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
@@ -29,50 +28,14 @@ const ProfilePage = () => {
 
 
 
-function getCookie(name) {
-  let cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      // Matches: csrftoken=value
-      if (cookie.startsWith(name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}
-
-  const logout = () => {
-
-alert("hiiiiiiii")
-const csrfToken = getCookie('csrftoken');
-
-axios.post(
-  `/users/logout/`,
-  {}, // body
-  {
-    headers: {
-      'X-CSRFToken': csrfToken,
-      'Content-Type': 'application/json',
-    },
-    withCredentials: true,
-  }
-)
-.then(response => {
-  navigate("/login");
-})
-.catch(error => {
-  const msg = error.response?.data?.error || error.message || 'خطای ناشناخته';
-  console.error('❌ خطا:', msg);
-});
-
-
+const logout = () => {
+localStorage.removeItem("access_token");
+localStorage.removeItem("refresh_token");
+sessionStorage.removeItem("access_token");
+sessionStorage.removeItem("refresh_token");
+navigate("/login");
 
 };
-
 
 
   const handleFileChange = async (e) => {
@@ -85,14 +48,17 @@ axios.post(
     formData.append('profile_image', file);
 
     try {
-      const res = await axios.patch("/users/change_picture/", formData, {
+      const res = await axios.patch("users/change_picture/", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+    
 
       console.log('پروفایل آپدیت شد:', res.data);
       setUser(res.data);
+      alert('تصویر با موفقیت آپلود شد');
+
     } catch (err) {
       console.error('خطا در آپلود تصویر', err.response?.data);
     }
@@ -101,9 +67,16 @@ axios.post(
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://rahilshabani.pythonanywhere.com/";
 
   useEffect(() => {
+      const token = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+
+  if (!token) {
+    navigate("/login");
+    return;
+  }
+
   fetchCities();
 
-  axios.get(`${backendUrl}users/profile/`, {credentials: 'include'})
+  axios.get(`users/profile/`)
     .then(response => {
       setUser(response.data);
     })
@@ -122,7 +95,7 @@ axios.post(
 
 
   const fetchCities = () => {
-    axios.get(`${backendUrl}/users/show/`,{credentials: 'include'})
+    axios.get(`users/show/`)
       .then(response => {
         setCities(response.data);
       })

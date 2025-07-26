@@ -1,40 +1,87 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
-import RegisterForm from "./user/RegisterForm";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import LoginForm from "./user/LoginForm";
+// import Profile from "./county/ProfilePage";
+// import Manager from "./manager/ProfilePage";
+// import HomePage from "./HomePage";
+// import './tailwind.min.css';
+// import './globalStyle.css';
+
+
+// import PrivateRoute from "./routes/PrivateRoute";
+
+// function App() {
+
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/" element={<HomePage />} />
+//         <Route path="/login" element={<LoginForm />} />
+
+//         <Route
+//           path="/profile"
+//           element={
+//             <PrivateRoute>
+//               <Profile />
+//             </PrivateRoute>
+//           }
+//         />
+
+//         <Route path="/manager" element={<Manager />} />
+        
+//       </Routes>
+//     </Router>
+//   );
+// }
+
+// export default App;
+
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import LoginForm from "./user/LoginForm";
 import Profile from "./county/ProfilePage";
 import Manager from "./manager/ProfilePage";
 import HomePage from "./HomePage";
+
 import './tailwind.min.css';
 import './globalStyle.css';
-import CreateProgram from './programs/CreateProgram';
-import CreatSubProgram from './programs/CreateSubProgram';
-
-import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // null = هنوز چک نشده
+
+  useEffect(() => {
+    const accessToken =
+      localStorage.getItem("access_token") ||
+      sessionStorage.getItem("access_token");
+
+    setIsAuthenticated(!!accessToken); // تبدیل به true یا false
+  }, []);
+
+  if (isAuthenticated === null) {
+    // هنوز در حال بررسی هستیم
+    return <div className="text-center p-8">در حال بارگذاری...</div>;
+  }
 
   return (
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<RegisterForm />} />
         <Route path="/login" element={<LoginForm />} />
 
         <Route
           path="/profile"
           element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
+            isAuthenticated ? <Profile /> : <Navigate to="/login" replace />
           }
         />
 
-        <Route path="/programs" element={<CreateProgram />} />
-        <Route path="/subprograms" element={<CreatSubProgram />} />
-        <Route path="/manager" element={<Manager />} />
-        
+        <Route
+          path="/manager"
+          element={
+            isAuthenticated ? <Manager /> : <Navigate to="/login" replace />
+          }
+        />
       </Routes>
     </Router>
   );

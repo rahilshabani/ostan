@@ -1,15 +1,12 @@
-import React, { useState,useEffect, use } from "react";
-import axios from "axios";
+import React, { useState,useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
-axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
-
-axios.defaults.withCredentials = true;
+import axios from "../axiosInstance";
 
 const LoginForm = () => {
 const navigate = useNavigate();
 const [hasCheckedLogin, setHasCheckedLogin] = useState(false);
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
 
 useEffect(() => {
   if (hasCheckedLogin) return;
@@ -79,11 +76,21 @@ const handleSubmit = async (e) => {
 
 
 const login = async (username, password, remember) => {
-  const res = await axios.post("/users/login/", {
-    username,
-    password,
-    remember
-  });
+ const res = await axios.post("/users/login/", {
+  username,
+  password,
+  remember,
+});
+
+if (remember) {
+  localStorage.setItem("access_token", res.data.access);
+  localStorage.setItem("refresh_token", res.data.refresh);
+} else {
+  sessionStorage.setItem("access_token", res.data.access);
+  sessionStorage.setItem("refresh_token", res.data.refresh);
+}
+
+
   return res.data;  
 };
 
