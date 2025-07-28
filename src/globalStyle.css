@@ -1,3 +1,55 @@
+:root {
+  --color-primary: #201E43;
+  --color-secondary: #134B70;
+  --color-accent: #508C9B;
+  --color-background: #EEEEEE;
+}
+
+.button{
+  background-color: var(--color-secondary) !important;
+}
+
+.button:hover{
+  background-color: var(--color-primary) !important;
+}
+
+.light-button{
+  background-color: var(--color-accent) !important;
+}
+
+.light-button:hover{
+  background-color: var(--color-secondary) !important;
+}
+
+
+.sidebar-gradient {
+  background: linear-gradient(to bottom,
+    var(--color-primary),
+    var(--color-secondary),
+    var(--color-accent)
+  );
+  color: var(--color-background);
+}
+
+.primary{
+  background-color: var(--color-primary) !important;
+}
+
+.secondary{
+  background-color: var(--color-secondary);
+}
+
+.accent{
+  background-color: var(--color-accent);
+}
+
+.background{
+  background-color: var(--color-background) !important;
+}
+.menu-gradient {
+  background-image: linear-gradient(to right, var(--color-secondary), var(--color-primary));
+}
+
 .DatePicker__calendarContainer {
   z-index: 9999 !important;
   position: fixed !important;

@@ -83,7 +83,7 @@ const ChangePasswordForm = () => {
         className="block w-full mb-3 border p-2 rounded"
       />
 
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">ثبت</button>
+      <button type="submit" className="button text-white px-4 py-2 rounded">ثبت</button>
 
       {message && <p className="text-green-600 mt-2">{message}</p>}
       {error && <p className="text-red-600 mt-2">{error}</p>}

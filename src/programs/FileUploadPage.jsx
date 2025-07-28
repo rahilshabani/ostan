@@ -66,7 +66,7 @@ const FileUploadPage = ({ audience = "both", user }) => {
       const downloadUrl = `${backendUrl}/media/base/kham.xlsx`;
       window.open(downloadUrl, '_blank');
     }}
-    className="text-sm px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+    className="text-sm px-3 py-1 text-white rounded button transition"
     title="دانلود فایل خام Excel"
   >
     دانلود فایل خام Excel

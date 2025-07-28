@@ -6,10 +6,11 @@ const LoginForm = () => {
 const navigate = useNavigate();
 const [hasCheckedLogin, setHasCheckedLogin] = useState(false);
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const [manualLogin, setManualLogin] = useState(false);
 
 
 useEffect(() => {
-  if (hasCheckedLogin) return;
+  if (hasCheckedLogin || manualLogin) return;
 
   const checkLoggedIn = async () => {
     try {
@@ -26,7 +27,7 @@ useEffect(() => {
   };
 
   checkLoggedIn();
-}, [hasCheckedLogin, navigate]);
+}, [hasCheckedLogin, manualLogin, navigate]);
 
 
 
@@ -59,6 +60,7 @@ const handleSubmit = async (e) => {
   try {
 
     const result = await login(username, password, rememberMe);
+    setManualLogin(true);
     navigate(result.redirect);
 
 
@@ -97,8 +99,8 @@ if (remember) {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 p-4" dir="rtl">
-      <header className="fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex flex-row-reverse justify-between items-center shadow-lg">
+    <div className="flex items-center justify-center min-h-screen background p-4" dir="rtl">
+      <header className="menu-gradient fixed top-0 w-full z-50 bg-opacity-90 backdrop-blur-md px-6 py-4 flex flex-row-reverse justify-between items-center shadow-lg">
         <div className="flex items-center flex-row-reverse space-x-3">
           <img
             src={LOGO_URL}
@@ -115,7 +117,7 @@ if (remember) {
         </nav>
       </header>
 
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+      <div className="menu-gradient p-8 rounded-lg shadow-lg w-full max-w-md text-white">
         <h2 className="text-2xl font-bold text-center mb-4">گروه آموزشی کامپیوتر استان مازندران</h2>
         <h2 className="text-2xl font-bold text-center mb-4">ورود به سامانه</h2>
 
@@ -123,7 +125,7 @@ if (remember) {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="username" className="block text-sm font-medium">
               نام کاربری:
             </label>
             <input
@@ -137,7 +139,7 @@ if (remember) {
             />
           </div>
           <div className="mb-6">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="block text-sm font-medium">
               رمز عبور:
             </label>
             <input
@@ -159,14 +161,14 @@ if (remember) {
               onChange={handleChange}
               className="mr-2"
             />
-            <label htmlFor="rememberMe" className="text-sm text-gray-700 pr-2">
+            <label htmlFor="rememberMe" className="text-sm pr-2">
               مرا به خاطر بسپار
             </label>
           </div>
           <button
             type="submit"
             disabled={loading}
-            className={`w-full text-white p-2 rounded-md ${loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"}`}
+            className={`w-full text-white p-2 rounded-md ${loading ? "bg-gray-400" : "light-button"}`}
           >
             {loading ? "ورود ..." : "ورود"}
           </button>

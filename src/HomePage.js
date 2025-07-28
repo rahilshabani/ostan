@@ -38,7 +38,7 @@ useEffect(() => {
   return (
     <div className="bg-gradient-to-r from-blue-100 via-white to-blue-100 min-h-screen">
       {/* Header */}
-      <header className="text-white fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex justify-between items-center shadow-lg">
+      <header className="text-white fixed top-0 w-full z-50 menu-gradient bg-opacity-90 backdrop-blur-md px-6 py-4 flex justify-between items-center shadow-lg">
         <div className="flex items-center space-x-3 rtl:space-x-reverse">
           <img src={LOGO_URL} alt="لوگو" className="w-10 h-10 rounded-full" loading="lazy" />
           <a href="/">
@@ -167,7 +167,7 @@ useEffect(() => {
       </section>
 
       {/* Footer */}
-      <footer className="text-center py-6 bg-gradient-to-l from-blue-900 to-blue-700 backdrop-blur-sm mt-12">
+      <footer className="text-center py-6 menu-gradient backdrop-blur-sm mt-12">
         <p className="text-sm text-white">
           © {new Date().getFullYear()} گروه کامپیوتر مازندران. تمام حقوق محفوظ است.
         </p>

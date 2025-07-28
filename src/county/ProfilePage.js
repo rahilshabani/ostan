@@ -171,7 +171,7 @@ const logout = () => {
             <div className="flex justify-end mb-4">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-lg shadow"
+                className="button text-white px-4 py-2 rounded-lg shadow"
               >
                 + افزودن هنرستان
               </button>
@@ -232,7 +232,7 @@ const logout = () => {
 
   return (
     <div className="min-h-screen flex font-sans bg-gradient-to-br from-blue-50 to-white" dir="rtl">
-     <header className="fixed top-0 w-full z-50 bg-gradient-to-l from-blue-800 to-blue-600 bg-opacity-90 backdrop-blur-md px-6 py-4 flex flex-row-reverse justify-between items-center shadow-lg">
+     <header className="fixed top-0 w-full z-50 bg-opacity-90 backdrop-blur-md px-6 py-4 flex flex-row-reverse justify-between items-center shadow-lg menu-gradient">
         <div className="flex items-center flex-row-reverse space-x-3">
           <img
             src={LOGO_URL}
@@ -275,15 +275,15 @@ const logout = () => {
 
 <aside
   className={`
-    fixed top-0 right-0 z-50 w-64 bg-gradient-to-b from-blue-100 to-white shadow-lg
-    p-4 space-y-4 text-right transform transition-transform duration-300
+    fixed top-0 right-0 z-50 w-64
+    p-4 space-y-4 text-right
+    transform transition-transform duration-300
     ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}
     md:translate-x-0 md:static
-    md:shadow-none md:rounded-none md:bg-transparent
-    md:p-0
+    md:shadow-none md:rounded-none md:bg-transparent md:p-0
     overflow-y-auto touch-pan-y
-    scrollbar-none
-    custom-scroll
+    scrollbar-none custom-scroll
+    sidebar-gradient backdrop-blur-md shadow-lg rounded-l-xl
   `}
 >
 
@@ -296,10 +296,10 @@ const logout = () => {
               className="w-20 h-20 object-cover rounded-full border-2 border-gray-300 cursor-pointer mt-10"
               onClick={handleImageClick}
             />
-            <p className="font-bold text-lg text-gray-800">
+            <p className="font-bold text-lg">
               {(user?.first_name ?? '') + " " + (user?.last_name ?? '')}
             </p>
-            <p className="text-gray-600">{locationText}</p>
+            <p className="text-gray-400">{locationText}</p>
           </div>
         ) : (
           <p className="text-center text-gray-500 mb-6">در حال بارگذاری...</p>

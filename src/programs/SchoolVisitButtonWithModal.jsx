@@ -596,7 +596,7 @@ const handleRemoveArtisan = (index) => {
 
   return (
     <>
-      <button onClick={() => setModalOpen(true)} className="px-4 py-2 bg-blue-600 text-white rounded">ثبت بازدید</button>
+      <button onClick={() => setModalOpen(true)} className="px-4 py-2 button text-white rounded">ثبت بازدید</button>
 
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

@@ -11,7 +11,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-export default function CityBarChart({ title, county, apiUrl, highlightColor = '#ff4d4d', defaultColor = '#8884d8' }) {
+export default function CityBarChart({ title, county, apiUrl, highlightColor = '#ff4d4d', defaultColor = '#134B70' }) {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 

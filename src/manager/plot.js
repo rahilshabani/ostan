@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '../axiosInstance';
 import mazandaranCounties from '../data/mazandaranCounties';
 
-export default function CityChart({ valueKey = "ataValue", title= "",  admin = true  }) {
+export default function CityChart({ valueKey = "ataValue", title= "",  admin = "true"  }) {
   const [cities, setCities] = useState([]);
 
 
@@ -49,7 +49,7 @@ const changeValue = (userId, step) => {
   .sort((a, b) => b[valueKey] - a[valueKey])
   .map((city) => (
     <div key={city.id} className="flex items-center justify-end gap-4 w-full">
-      {admin && (
+      {admin === "true" && (
         <div className="flex flex-col gap-1">
           <button
             onClick={() => changeValue(city.id, 1)}
@@ -74,7 +74,7 @@ const changeValue = (userId, step) => {
       <div className="flex-1 bg-gray-200 rounded h-8 relative overflow-hidden">
         {(city[valueKey] || 0) > 0 && (
           <div
-            className="bg-blue-500 h-full transition-all duration-300 flex items-center justify-end pr-2 text-white font-semibold text-xs"
+            className="button h-full transition-all duration-300 flex items-center justify-end pr-2 text-white font-semibold text-xs"
             style={{
               width: `${city[valueKey] * 2}%`
             }}
