@@ -1,38 +1,10 @@
-import React, { useState,useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, {useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "../axiosInstance";
 
-const LoginForm = () => {
-const navigate = useNavigate();
-const [hasCheckedLogin, setHasCheckedLogin] = useState(false);
-const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
-const [manualLogin, setManualLogin] = useState(false);
-
-
-useEffect(() => {
-  if (hasCheckedLogin || manualLogin) return;
-
-  const checkLoggedIn = async () => {
-    try {
-      const res = await axios.get("/users/me/");
-      if (res.status === 200 && res.data?.redirect && res.data.redirect !== "none") {
-        console.log("redirecting to:", res.data.redirect);
-        navigate(res.data.redirect);
-      }
-    } catch (err) {
-      console.log("Not logged in or unauthorized");
-    } finally {
-      setHasCheckedLogin(true);
-    }
-  };
-
-  checkLoggedIn();
-}, [hasCheckedLogin, manualLogin, navigate]);
-
-
-
-
-  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
+const LoginForm = ({ onLoginSuccess }) => {
+  const navigate = useNavigate();
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL;
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -40,8 +12,37 @@ useEffect(() => {
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [hasCheckedLogin, setHasCheckedLogin] = useState(false);
   const { username, password, rememberMe } = formData;
 
+  const LOGO_URL = `${API_BASE_URL.replace("/api", "")}media/base/logo.png`;
+
+  useEffect(() => {
+  if (hasCheckedLogin) return;
+  const accessToken = localStorage.getItem("access_token") || sessionStorage.getItem("access_token");
+  if (!accessToken) {
+    setHasCheckedLogin(true);
+    return;
+  }
+
+
+
+  const checkLoggedIn = async () => {
+    try {
+      const res = await axios.get("/users/me/");
+      if (res.status === 200 && res.data?.redirect && res.data.redirect !== "none") {
+        setHasCheckedLogin(true); 
+        navigate(res.data.redirect); 
+      } else {
+        setHasCheckedLogin(true);
+      }
+    } catch (err) {
+      setHasCheckedLogin(true);
+    }
+  };
+
+  checkLoggedIn();
+}, [hasCheckedLogin, navigate]);
 
 
   const handleChange = (e) => {
@@ -52,51 +53,46 @@ useEffect(() => {
     });
   };
 
-const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
   e.preventDefault();
   setLoading(true);
   setErrorMessage("");
 
   try {
-
     const result = await login(username, password, rememberMe);
-    setManualLogin(true);
+    onLoginSuccess();
     navigate(result.redirect);
-
-
   } catch (error) {
     if (error.response) {
       setErrorMessage(error.response.data.detail || "خطای ورود! لطفاً اطلاعات را بررسی کنید.");
     } else {
       setErrorMessage("خطای سرور! لطفاً بعداً تلاش کنید.");
     }
-    console.error("Login Error:", error);
   } finally {
     setLoading(false);
   }
 };
 
 
-const login = async (username, password, remember) => {
- const res = await axios.post("/users/login/", {
-  username,
-  password,
-  remember,
-});
+  const login = async (username, password, remember) => {
+    const res = await axios.post("/users/login/", {
+      username,
+      password,
+      remember,
+    });
 
-if (remember) {
-  localStorage.setItem("access_token", res.data.access);
-  localStorage.setItem("refresh_token", res.data.refresh);
-} else {
-  sessionStorage.setItem("access_token", res.data.access);
-  sessionStorage.setItem("refresh_token", res.data.refresh);
-}
+    const { access, refresh } = res.data;
 
+    if (remember) {
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+    } else {
+      sessionStorage.setItem("access_token", access);
+      sessionStorage.setItem("refresh_token", refresh);
+    }
 
-  return res.data;  
-};
-
-
+    return res.data;
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen background p-4" dir="rtl">
@@ -106,8 +102,9 @@ if (remember) {
             src={LOGO_URL}
             alt="لوگو"
             className="w-10 h-10 rounded-full"
-          /><a href='/'>
-          <h1 className="text-xl font-bold text-white">گروه کامپیوتر استان مازندران</h1>
+          />
+          <a href='/'>
+            <h1 className="text-xl font-bold text-white">گروه کامپیوتر استان مازندران</h1>
           </a>
         </div>
         <nav className="hidden md:flex space-x-6 space-x-reverse text-white">
@@ -117,7 +114,7 @@ if (remember) {
         </nav>
       </header>
 
-      <div className="menu-gradient p-8 rounded-lg shadow-lg w-full max-w-md text-white">
+      <div className="menu-gradient p-8 rounded-lg shadow-lg w-full max-w-md text-white mt-24">
         <h2 className="text-2xl font-bold text-center mb-4">گروه آموزشی کامپیوتر استان مازندران</h2>
         <h2 className="text-2xl font-bold text-center mb-4">ورود به سامانه</h2>
 
@@ -135,7 +132,7 @@ if (remember) {
               value={formData.username}
               onChange={handleChange}
               required
-              className="w-full p-2 border border-gray-300 rounded-md mt-2"
+              className="w-full p-2 border border-gray-300 rounded-md mt-2 text-black"
             />
           </div>
           <div className="mb-6">
@@ -149,7 +146,7 @@ if (remember) {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full p-2 border border-gray-300 rounded-md mt-2"
+              className="w-full p-2 border border-gray-300 rounded-md mt-2 text-black"
             />
           </div>
           <div className="flex items-center mb-6">
@@ -173,8 +170,6 @@ if (remember) {
             {loading ? "ورود ..." : "ورود"}
           </button>
         </form>
-
-
       </div>
     </div>
   );

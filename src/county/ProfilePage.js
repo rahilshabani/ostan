@@ -229,6 +229,13 @@ const logout = () => {
       locationText = `${mazandaranCounties[user.county]} (${user.area})`;
     }
   }
+if (!user) {
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-white">
+      <p className="text-gray-500 text-xl">در حال بارگذاری...</p>
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen flex font-sans bg-gradient-to-br from-blue-50 to-white" dir="rtl">
@@ -306,14 +313,14 @@ const logout = () => {
         )}
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'status' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'status' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('status'); setSidebarOpen(false); }}
         >
           📊 وضعیت کلی
         </button>
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'profile' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'profile' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('profile'); setSidebarOpen(false); }}
         >
           👤 پروفایل کاربر
@@ -321,7 +328,7 @@ const logout = () => {
 
         {user && (
           <button
-            className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'schools' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+            className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'schools' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
             onClick={() => { setActiveSection('schools'); setSidebarOpen(false); }}
           >
             🏫 هنرستان های {mazandaranCounties[user.county]}
@@ -329,7 +336,7 @@ const logout = () => {
         )}
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'visits' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'visits' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('visits'); setSidebarOpen(false); }}
         >
           📝 بازدیدها
@@ -338,28 +345,28 @@ const logout = () => {
         {user && (
           <>
             <button
-              className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'ata' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+              className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'ata' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
               onClick={() => { setActiveSection('ata'); setSidebarOpen(false); }}
             >
               🎤 {mazandaranCounties[user.county]} در کنفرانس آتا
             </button>
 
             <button
-              className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'iranhooshmand' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+              className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'iranhooshmand' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
               onClick={() => { setActiveSection('iranhooshmand'); setSidebarOpen(false); }}
             >
               🤖 {mazandaranCounties[user.county]} در ایران هوشمند
             </button>
 
             <button
-              className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'plan' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+              className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'plan' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
               onClick={() => { setActiveSection('plan'); setSidebarOpen(false); }}
             >
               🏆 {mazandaranCounties[user.county]} در مسابقات طرح درس
             </button>
 
             <button
-              className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'question' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+              className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'question' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
               onClick={() => { setActiveSection('question'); setSidebarOpen(false); }}
             >
               ❓ {mazandaranCounties[user.county]} در سوالات عملکردی
@@ -367,21 +374,20 @@ const logout = () => {
           </>
         )}
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'chpass' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'chpass' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('chpass'); setSidebarOpen(false); }}
         >
           🔒 تغییر رمز عبور
         </button>
 
         <button
-          className="w-full text-right py-2 px-4 rounded-lg hover:bg-red-50"
+          className="w-full text-right py-2 px-4 rounded-lg hover:bg-red-50 hover:text-black"
           onClick={logout}
         >
           🔓 خروج
         </button>
       </aside>
 
-      {/* Main content */}
       <main className="flex-1 p-6 mt-20">{renderSection()}</main>
     </div>
   );

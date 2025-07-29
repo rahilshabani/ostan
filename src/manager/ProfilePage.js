@@ -256,61 +256,61 @@ navigate("/login");
         )}
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'status' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'status' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('status'); setSidebarOpen(false); }}
         >
           📊 وضعیت کلی
         </button>
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'cities' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'cities' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('cities'); setSidebarOpen(false); }}
         >
           📝 شهرستان ها
         </button>
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'visit' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'visit' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('visit'); setSidebarOpen(false); }}
         >
           📝 بررسی بازدید شهرستان ها
         </button>
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'ata' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'ata' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('ata'); setSidebarOpen(false); }}
         >
           🎤 عملکرد در کنفرانس آتا
         </button>
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'iranhooshmand' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'iranhooshmand' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('iranhooshmand'); setSidebarOpen(false); }}
         >
           🤖 عملکرد ایران هوشمند
         </button>
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'plan' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'plan' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('plan'); setSidebarOpen(false); }}
         >
           🏆 عملکرد در طراحی درس
         </button>
 
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'question' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'question' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('question'); setSidebarOpen(false); }}
         >
           ❓ عملکرد در طراحی سوال عملکردی
         </button>
         <button
-          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'chpass' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50'}`}
+          className={`w-full text-right py-2 px-4 rounded-lg ${activeSection === 'chpass' ? 'bg-blue-200 text-blue-800 font-bold' : 'hover:bg-blue-50 hover:text-black'}`}
           onClick={() => { setActiveSection('chpass'); setSidebarOpen(false); }}
         >
           🔒 تغییر رمز عبور
         </button>
        <button
-          className="w-full text-right py-2 px-4 rounded-lg hover:bg-red-50"
+          className="w-full text-right py-2 px-4 rounded-lg hover:bg-red-50 hover:text-black"
           onClick={logout}
         >
           🔓 خروج
